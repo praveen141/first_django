@@ -17,7 +17,13 @@ def about(request):
 def analyze(request):
     # GET the text
     djtext = request.GET.get('content', 'default')
+    # Check checkbox values
     removepun = request.GET.get('removepunc', 'off')
+    fullcap = request.GET.get('fullcap', 'off')
+    newlineremover = request.GET.get('newlineremover', 'off')
+    spaceremover = request.GET.get('spaceremover', 'off')
+    charcount = request.GET.get('charcount', 'off')
+
     print(removepun)
     print(djtext)
     # GET the text
@@ -29,6 +35,25 @@ def analyze(request):
                 analyzed=analyzed + i
         params = {'purpose': 'remove stops', 'analyzed_text': analyzed}
         return render(request,'analyze.html',params)
+    elif fullcap != 'off':
+        analyzed = djtext.upper()
+        params = {'purpose': 'Capitalize Letters', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+    elif newlineremover != 'off':
+        analyzed = djtext.replace('\n', '')
+        params = {'purpose': 'New Line Removers', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+    elif spaceremover != 'off':
+        analyzed = djtext.replace('  ', '')
+        params = {'purpose': 'Space Removers', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
+    elif charcount != 'off':
+        count = 0
+        for char in djtext:
+            count += 1
+        analyzed = count
+        params = {'purpose': 'Count Character', 'analyzed_text': analyzed}
+        return render(request, 'analyze.html', params)
     else:
         return HttpResponse("Error")
     #return HttpResponse('''<h2> removepunc </h2>
